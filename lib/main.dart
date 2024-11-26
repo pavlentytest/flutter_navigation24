@@ -8,8 +8,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: PageA(),
+      title: 'My App',
+      initialRoute: '/A',
+      routes: {
+        '/A': (context) => PageA(),
+        '/B': (context) => PageB(),
+        '/C': (context) => PageC(),
+      },
     );
   }
 }
@@ -32,8 +37,7 @@ class PageA extends StatelessWidget {
         child: TextButton(
           child: const Text('Go to «Page B»'),
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => PageB()));
+            Navigator.pushNamed(context, '/B');
           },
         ),
       ),
@@ -63,13 +67,13 @@ class PageB extends StatelessWidget {
               TextButton(
                 child: const Text('Go to «Page C»'),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => PageC()));
+                  Navigator.pushNamed(context, '/C');
                 },
               ),
             ],
           ),
-        ));
+        )
+    );
   }
 }
 
