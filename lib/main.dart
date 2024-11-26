@@ -8,67 +8,60 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App',
       initialRoute: '/A',
       routes: {
         '/A': (context) => PageA(),
         '/B': (context) => PageB(),
-        '/C': (context) => PageC(),
       },
     );
   }
 }
 
 class MyColors {
-  static const red = Color(0xFFFF2C00);
   static const green = Color(0xFF00DA72);
   static const blue = Color(0xFF4042EE);
 }
 
-class PageA extends StatelessWidget {
+class PageA extends StatefulWidget {
+  const PageA({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Page A'),
-        backgroundColor: MyColors.blue,
-      ),
-      body: Center(
-        child: TextButton(
-          child: const Text('Go to «Page B»'),
-          onPressed: () {
-            Navigator.pushNamed(context, '/B');
-          },
-        ),
-      ),
-    );
-  }
+  State<PageA> createState() => _PageAState();
 }
 
-class PageB extends StatelessWidget {
+class _PageAState extends State<PageA> {
+  final _textFieldController = TextEditingController(text: '');
+
+  @override
+  void dispose() {
+    _textFieldController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Page B'),
-          backgroundColor: MyColors.green,
+          title: const Text('Page A'),
+          backgroundColor: MyColors.blue,
         ),
-        body: Center(
-          child: Row(
+        body: SizedBox.expand(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              TextButton(
-                child: const Text('Go back'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+              Padding(
+                padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                child: TextField(
+                  controller: _textFieldController,
+                  decoration: const InputDecoration(
+                      hintText: 'Enter your name'
+                  ),
+                ),
               ),
-              const SizedBox(width: 16),
               TextButton(
-                child: const Text('Go to «Page C»'),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/C');
-                },
+                  child: const Text('Say hello'),
+                  onPressed: () => Navigator.pushNamed(context, '/B', arguments: _textFieldController.text)
               ),
             ],
           ),
@@ -77,22 +70,21 @@ class PageB extends StatelessWidget {
   }
 }
 
-class PageC extends StatelessWidget {
+class PageB extends StatelessWidget {
+  const PageB({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final userName = ModalRoute.of(context)?.settings.arguments;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Page C'),
-        backgroundColor: MyColors.red,
-      ),
-      body: Center(
-        child: TextButton(
-          child: const Text('Go back'),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        appBar: AppBar(
+          title: const Text('Page B'),
+          backgroundColor: MyColors.green,
         ),
-      ),
+        body: Center(
+          child: Text('Hello, $userName'),
+        )
     );
   }
 }
