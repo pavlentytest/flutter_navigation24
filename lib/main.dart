@@ -23,13 +23,51 @@ class MyColors {
 }
 
 class PageA extends StatefulWidget {
-  const PageA({super.key});
-
   @override
   State<PageA> createState() => _PageAState();
 }
 
 class _PageAState extends State<PageA> {
+  String _name = 'Alex';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Page A'),
+        backgroundColor: MyColors.blue,
+      ),
+      body: SizedBox.expand(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Your name is: «$_name»'),
+            TextButton(
+              child: const Text('Edit name'),
+              onPressed: () async { // Используем ключевое слово async
+                final result = await Navigator.pushNamed(context, '/B', arguments: _name);
+                if (result != null) {
+                  setState(() {
+                    _name = result as String;
+                  });
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PageB extends StatefulWidget {
+  const PageB({super.key});
+
+  @override
+  State<PageB> createState() => _PageBState();
+}
+
+class _PageBState extends State<PageB> {
   final _textFieldController = TextEditingController(text: '');
 
   @override
@@ -42,8 +80,8 @@ class _PageAState extends State<PageA> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Page A'),
-          backgroundColor: MyColors.blue,
+          title: const Text('Page B'),
+          backgroundColor: MyColors.green,
         ),
         body: SizedBox.expand(
           child: Column(
@@ -54,36 +92,14 @@ class _PageAState extends State<PageA> {
                 padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
                 child: TextField(
                   controller: _textFieldController,
-                  decoration: const InputDecoration(
-                      hintText: 'Enter your name'
-                  ),
                 ),
               ),
               TextButton(
-                  child: const Text('Say hello'),
-                  onPressed: () => Navigator.pushNamed(context, '/B', arguments: _textFieldController.text)
+                child: const Text('Save'),
+                onPressed: () => Navigator.pop(context, _textFieldController.text),
               ),
             ],
           ),
-        )
-    );
-  }
-}
-
-class PageB extends StatelessWidget {
-  const PageB({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final userName = ModalRoute.of(context)?.settings.arguments;
-
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Page B'),
-          backgroundColor: MyColors.green,
-        ),
-        body: Center(
-          child: Text('Hello, $userName'),
         )
     );
   }
